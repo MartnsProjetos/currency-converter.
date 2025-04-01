@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <title>Conversor de Moedas para Real</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Conversor de Moedas</h1>
+            <form id="conversor-form">
+                <label for="Moeda">Escolha a Moeda:</label>
+                <select name="Moeda" id="Moeda">
+                    <option value="">Selecione uma moeda</option>
+                    <option value="USD">Dólar Americano (USD)</option>
+                    <option value="EUR">Euro (EUR)</option>
+                </select>
+                <label for="quantidade">Valor:</label>
+                <input type="number" name="quantidade" id="quantidade" placeholder="Digite o valor" required> 
+                <button type="submit">Converter Agora</button>
+                
+                <div class="resultado-container">
+                    <div id="moeda-original" class="valor-display"></div>
+                    <div class="seta-conversao">↓</div>
+                    <div id="conversao" class="valor-display"></div>
+                    <div id="ultima-atualizacao" class="atualizacao-info"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+      
+    <script>
+        async function obterCotacao(moeda) {
+            try {
+                const response = await fetch(`https://economia.awesomeapi.com.br/last/${moeda}-BRL`);
+                const data = await response.json();
+                return {
+                    taxa: parseFloat(data[`${moeda}BRL`].bid),
+                    ultimaAtualizacao: new Date(data[`${moeda}BRL`].create_date).toLocaleString('pt-BR')
+                };
+            } catch (error) {
+                console.error('Erro ao obter cotação:', error);
+                return null;
+            }
+        }
+
+        document.getElementById('conversor-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const moedaSelect = document.getElementById('Moeda');
+            const moeda = moedaSelect.value;
+            const quantidade = parseFloat(document.getElementById('quantidade').value);
+            
+            if (!moeda) {
+                document.getElementById('conversao').textContent = 'Selecione uma moeda válida.';
+                return;
+            }
+
+            const cotacaoInfo = await obterCotacao(moeda);
+            
+            if (!cotacaoInfo) {
+                document.getElementById('conversao').textContent = 'Erro ao obter cotação. Tente novamente.';
+                return;
+            }
+
+            const simboloMoeda = moeda === 'USD' ? '$' : '€';
+            const valorConvertido = quantidade * cotacaoInfo.taxa;
+            
+            // Exibe o valor original
+            document.getElementById('moeda-original').textContent = 
+                `${simboloMoeda} ${quantidade.toFixed(2)} ${moedaSelect.options[moedaSelect.selectedIndex].text}`;
+            
+            // Exibe o valor convertido
+            document.getElementById('conversao').textContent = 
+                `R$ ${valorConvertido.toFixed(2)} Reais`;
+            
+            // Exibe a última atualização
+            document.getElementById('ultima-atualizacao').textContent = 
+                `Cotação atualizada em: ${cotacaoInfo.ultimaAtualizacao}`;
+            
+            // Adiciona classe para ativar animação
+            document.querySelector('.resultado-container').classList.add('show-result');
+        });
+
+        // Atualiza a cotação automaticamente a cada 30 segundos
+        setInterval(async () => {
+            const moedaSelect = document.getElementById('Moeda');
+            const moeda = moedaSelect.value;
+            if (moeda && document.querySelector('.resultado-container').classList.contains('show-result')) {
+                const quantidade = parseFloat(document.getElementById('quantidade').value);
+                const cotacaoInfo = await obterCotacao(moeda);
+                
+                if (cotacaoInfo) {
+                    const valorConvertido = quantidade * cotacaoInfo.taxa;
+                    document.getElementById('conversao').textContent = 
+                        `R$ ${valorConvertido.toFixed(2)} Reais`;
+                    document.getElementById('ultima-atualizacao').textContent = 
+                        `Cotação atualizada em: ${cotacaoInfo.ultimaAtualizacao}`;
+                }
+            }
+        }, 30000); // 30 segundos
+    </script>
+</body>
+</html>
