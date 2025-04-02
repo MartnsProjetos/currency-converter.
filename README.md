@@ -1,29 +1,28 @@
-Conversor de Moedas
+💰 Currency Converter
 
-Este projeto é um conversor de moedas que permite a conversão de Dólar (USD) e Euro (EUR) para Real (BRL) em tempo real, utilizando a API AwesomeAPI.
+This project is a currency converter that allows real-time conversion of US Dollar (USD) and Euro (EUR) to Brazilian Real (BRL) using the AwesomeAPI.
 
-🚀 Tecnologias Utilizadas
+🚀 Technologies Used
 
-HTML, CSS e JavaScript
+HTML, CSS, and JavaScript
 
-API AwesomeAPI para cotações
-
-
-🔧 Como Usar
-
-1. Acesse o site: https://conversordemoedasparareal.netlify.app/
+AwesomeAPI for exchange rate data
 
 
-2. Escolha a moeda desejada
+🔧 How to Use
+
+1. Visit the website: https://conversordemoedasparareal.netlify.app/
 
 
-3. Insira o valor e clique em "Converter Agora"
+2. Select the desired currency
+
+
+3. Enter the amount and click "Convert Now"
 
 
 
-📜 Licença
+📜 License
 
-Projeto sob licença MIT. Contribuições são bem-vindas!
+This project is licensed under the MIT License. Contributions are welcome!
 
-💡 Dúvidas ou sugestões? Entre em contato!
-
+💡 Questions or suggestions? Feel free to reach out!
